@@ -1,0 +1,13 @@
+- name: iOS Simulator
+  # You may pin to the exact commit or the version.
+  # uses: pluxlabs/ios-simulator-action@85d33bf4db6510a5e96cfbd207f54e94d6c48141
+  uses: pluxlabs/ios-simulator-action@v1
+  with:
+    # Device type name or identifier, for example iPhone 16 Pro
+    device-type: 
+    # iOS runtime version, identifier, or latest
+    runtime: 
+    # Prefix used for the simulator name
+    name-prefix: 
+    # Reuse an available matching simulator with the requested prefix instead of creating one
+    reuse-existing: # optional, default is false
