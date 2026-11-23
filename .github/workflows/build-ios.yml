@@ -1,0 +1,45 @@
+name: Build iOS IPA
+
+on:
+  workflow_dispatch: # Ermöglicht manuelles Starten per Klick
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode Project
+        run: |
+          cd ios
+          xcodegen -q
+
+      - name: Build and Archive
+        run: |
+          cd ios
+          xcodebuild -project FM1Sampler.xcodeproj \
+            -scheme FM1Sampler \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath build/FM1Sampler.xcarchive \
+            archive \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY=""
+
+      - name: Package IPA
+        run: |
+          cd ios
+          mkdir Payload
+          cp -r build/FM1Sampler.xcarchive/Products/Applications/FM1Sampler.app Payload/
+          zip -r FM1Sampler.ipa Payload
+
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: FM1Sampler-IPA
+          path: ios/FM1Sampler.ipa
